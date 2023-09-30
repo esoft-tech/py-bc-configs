@@ -1,3 +1,3 @@
 # bc_config
 
-![](./docs/assets/coverage-badge.svg) ![](./docs/assets/unittests-badge.svg) ![](./docs/assets/mypy-badge.svg) ![](./docs/assets/ruff-badge.svg)
+![](./docs/source/_static/coverage-badge.svg) ![](./docs/source/_static/unittests-badge.svg) ![](./docs/source/_static/mypy-badge.svg) ![](./docs/source/_static/ruff-badge.svg)

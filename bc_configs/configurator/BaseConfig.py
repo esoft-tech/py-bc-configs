@@ -9,17 +9,17 @@ from pydantic import BaseModel, root_validator
 def _get_env_name_by_field_name(class_name: str, field_name: str) -> str:
     """
     Generate the environment variable name based on the class name and field name.
-    Used when you define your custom configuration class extending BaseConfig
-    or any other BaseConfig extended class for using different name of environment
+
+    This function is used when defining a custom configuration class that extends BaseConfig
+    or any other BaseConfig extended class, in order to use different names for environment
     variables for them.
 
-    Args:
-        class_name (str): The name of the class.
-        field_name (str): The name of the field.
-
-    Returns:
-        str: The environment variable name generated based on the class name
-        and field name.
+    :param class_name: The name of the class.
+    :type class_name: str
+    :param field_name: The name of the field.
+    :type field_name: str
+    :return: The environment variable name generated based on the class name and field name.
+    :rtype: str
     """
     return "_".join(
         [
@@ -48,17 +48,15 @@ def _get_field_form_env(
     `_get_env_name_by_field_name` function and returns the value of the corresponding
     environment variable.
 
-    Args:
-        class_name (str, optional): The name of the class. Defaults to None.
-        field_name (str, optional): The name of the field. Defaults to None.
-        env_name (str, optional): The name of the environment variable.
-        Defaults to None.
-
-    Returns:
-        any: The value of the field from the environment variables.
-
-    Raises:
-        TypeError: If the key type for the variable is invalid.
+    :param class_name: The name of the class.
+    :type class_name: str, optional
+    :param field_name: The name of the field.
+    :type field_name: str, optional
+    :param env_name: The name of the environment variable.
+    :type env_name: str, optional
+    :return: The value of the field from the environment variables.
+    :rtype: any
+    :raises TypeError: If the key type for the variable is invalid.
     """
     if isinstance(env_name, str):
         return os.getenv(env_name)
@@ -80,12 +78,13 @@ class BaseConfig(BaseModel, ABC):
         This function checks if any value in the 'values' dictionary is None.
         If a value is None, it retrieves the value from the environment variables
         based on the class name and field name.
-        Args:
-            cls (type): The class that the function is called on.
-            values (dict): The dictionary of values to check and update.
-        Returns:
-            dict: The updated dictionary of values that will be stored
-            in config instance.
+
+        :param cls: The class that the function is called on.
+        :type cls: type
+        :param values: The dictionary of values to check and update.
+        :type values: dict
+        :return: The updated dictionary of values that will be stored in config instance.
+        :rtype: dict
         """
         for k, field in cls.model_fields.items():
             if values.get(k) is None:

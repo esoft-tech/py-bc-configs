@@ -6,12 +6,12 @@ def run_unittests_and_create_badge():
     if os.system('./.venv/bin/python -m coverage run --source="./bc_configs" --omit="*test_*.py" -m unittest '
                  'discover --pattern="*test_*.py"'):
         Badge(left_txt="unittests", right_txt="failed", color="red").write_to(
-            "./docs/assets/unittests-badge.svg",
+            "./docs/source/_static/unittests-badge.svg",
             use_shields=True
         )
     else:
         Badge(left_txt="unittests", right_txt="passed", color="green").write_to(
-            "./docs/assets/unittests-badge.svg",
+            "./docs/source/_static/unittests-badge.svg",
             use_shields=True
         )
 
@@ -22,18 +22,18 @@ def run_coverage_and_create_badge():
     os.system('./.venv/bin/python -m coverage report')
     os.system('./.venv/bin/python -m coverage xml')
     os.system('./.venv/bin/genbadge coverage -i coverage.xml -o '
-              './docs/assets/coverage-badge.svg')
+              './docs/source/_static/coverage-badge.svg')
 
 
 def run_mypy_and_create_badge():
     if os.system('./.venv/bin/python -m mypy .'):
         Badge(left_txt="mypy", right_txt="failed", color="red").write_to(
-            "./docs/assets/mypy-badge.svg",
+            "./docs/source/_static/mypy-badge.svg",
             use_shields=True
         )
     else:
         Badge(left_txt="mypy", right_txt="passed", color="green").write_to(
-            "./docs/assets/mypy-badge.svg",
+            "./docs/source/_static/mypy-badge.svg",
             use_shields=True
         )
 
@@ -41,12 +41,12 @@ def run_mypy_and_create_badge():
 def run_ruff_and_create_badge():
     if os.system('./.venv/bin/python -m ruff check .'):
         Badge(left_txt="Ɍuff", right_txt="failed", color="red").write_to(
-            "./docs/assets/ruff-badge.svg",
+            "./docs/source/_static/ruff-badge.svg",
             use_shields=True
         )
     else:
         Badge(left_txt="Ɍuff", right_txt="passed", color="green").write_to(
-            "./docs/assets/ruff-badge.svg",
+            "./docs/source/_static/ruff-badge.svg",
             use_shields=True
         )
 

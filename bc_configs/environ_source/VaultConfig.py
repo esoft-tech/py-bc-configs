@@ -7,26 +7,32 @@ class VaultConfig(BaseConfig):
     Configuration for HashiCorp Vault.
     """
 
+    #: The address of the Vault server.
     address: str | None = Field(
         default=None,
         description="The address of the Vault server."
     )
+    #: The mount point of the Vault server.
     mount: str | None = Field(
         default=None,
         description="The mount point of the Vault server."
     )
+    #: The path to the secret in the Vault.
     path: str | None = Field(
         default=None,
         description="The path to the secret in the Vault."
     )
+    #: The authentication token for accessing the Vault.
     token: str | None = Field(
         default=None,
         description="The authentication token for accessing the Vault."
     )
+    #: The username for authentication (if token is not provided).
     username: str | None = Field(
         default=None,
         description="The username for authentication (if token is not provided)."
     )
+    #: The password for authentication (if token is not provided).
     password: str | None = Field(
         default=None,
         description="The password for authentication (if token is not provided)."
@@ -36,9 +42,8 @@ class VaultConfig(BaseConfig):
         """
         Check if the token or username and password are provided.
 
-        Returns:
-            bool: True if the token or username and password are provided,
-            False otherwise.
+        :return: True if the token or username and password are provided, False otherwise.
+        :rtype: bool
         """
         return bool(self.token or (self.username and self.password))
 
@@ -46,7 +51,7 @@ class VaultConfig(BaseConfig):
         """
         Check if all connect fields are filled.
 
-        Returns:
-            bool: True if all fields are filled, False otherwise.
+        :return: True if all fields are filled, False otherwise.
+        :rtype: bool
         """
         return all([self.address, self.mount, self.path, self.need_to_use()])

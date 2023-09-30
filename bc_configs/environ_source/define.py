@@ -9,9 +9,8 @@ def define(*, vault_config: VaultConfig | None = None) -> None:
     """
     Define the configuration for the application.
 
-    Args:
-        vault_config (VaultConfig | None): The configuration for accessing secrets
-        from a vault. Defaults to None.
+    :param vault_config: The configuration for accessing secrets from a vault. Defaults to None.
+    :type vault_config: VaultConfig | None
     """
     # Define environment variables from .env file
     _dotenv_define()
@@ -41,11 +40,11 @@ def _dotenv_define() -> None:
 def _vault_define(config: VaultConfig | None = None) -> None:
     """
     Define environment variables from secrets stored in Vault.
-    Args:
-        config: The VaultConfig object containing the configuration for accessing Vault.
-    Raises:
-        EnvironSourceException: If hvac module is not installed or if there is no
-        data to connect to Vault.
+
+    :param config: The VaultConfig object containing the configuration for accessing Vault.
+    :type config: VaultConfig | None
+
+    :raises EnvironSourceException: If hvac module is not installed or if there is no data to connect to Vault.
     """
     config = config or VaultConfig()
     if config.need_to_use():
