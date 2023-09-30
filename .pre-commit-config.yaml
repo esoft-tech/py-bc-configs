@@ -30,7 +30,7 @@ repos:
         types: [python]
       - id: coverage
         name: coverage
-        entry: '.venv/bin/python -m coverage run --omit="*test_*.py" -m unittest discover --pattern="*test_*.py"'
+        entry: '.venv/bin/python -m coverage run --source="./bc_configs" --omit="*test_*.py" -m unittest discover --pattern="*test_*.py"'
         language: system
         pass_filenames: false
         types: [python]

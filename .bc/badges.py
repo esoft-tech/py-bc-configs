@@ -3,7 +3,7 @@ from genbadge import Badge
 
 
 def run_unittests_and_create_badge():
-    if os.system('./.venv/bin/python -m coverage run --omit="*test_*.py" -m unittest '
+    if os.system('./.venv/bin/python -m coverage run --source="./bc_configs" --omit="*test_*.py" -m unittest '
                  'discover --pattern="*test_*.py"'):
         Badge(left_txt="unittests", right_txt="failed", color="red").write_to(
             "./docs/assets/unittests-badge.svg",
@@ -17,7 +17,7 @@ def run_unittests_and_create_badge():
 
 
 def run_coverage_and_create_badge():
-    os.system('./.venv/bin/python -m coverage run --omit="*test_*.py" -m unittest '
+    os.system('./.venv/bin/python -m coverage run --source="./bc_configs" --omit="*test_*.py" -m unittest '
               'discover --pattern="*test_*.py"')
     os.system('./.venv/bin/python -m coverage report')
     os.system('./.venv/bin/python -m coverage xml')
