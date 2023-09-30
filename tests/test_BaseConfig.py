@@ -2,7 +2,7 @@ import os
 import unittest
 from unittest.mock import patch
 
-from pydantic import ValidationError
+from pydantic import Field, ValidationError
 
 from bc_configs.configurator.BaseConfig import BaseConfig
 
@@ -47,6 +47,19 @@ class TestBaseConfig(unittest.TestCase):
             # Check if the correct error message is raised
             self.assertEqual(1, len(context.exception.errors()[0]['loc']))
             self.assertEqual("field2", context.exception.errors()[0]['loc'][0])
+
+    def test_custom_env_var_name(self) -> None:
+        # Create an instance of the custom configuration class that extends BaseConfig
+        class CustomConfig(BaseConfig):
+            my_field: str = Field(json_schema_extra={"env_name": "CUSTOM_ENV_NAME"})
+
+        # Mock the os.environ dictionary with the desired values
+        with patch.dict(os.environ, {"CUSTOM_ENV_NAME": "value1"}):
+            # Create an instance of the custom configuration class
+            config = CustomConfig()  # type: ignore[call-arg]
+
+        # Check if the values are retrieved from the environment variables correctly
+        self.assertEqual(config.my_field, "value1")
 
 
 if __name__ == "__main__":
