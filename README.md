@@ -1,7 +1,3 @@
 # bc_config
 
-![](./docs/assets/coverage-badge.svg)
-
-poetry config virtualenvs.in-project true
-
-poetry install
+![](./docs/assets/coverage-badge.svg) ![](./docs/assets/unittests-badge.svg) ![](./docs/assets/mypy-badge.svg) ![](./docs/assets/ruff-badge.svg)

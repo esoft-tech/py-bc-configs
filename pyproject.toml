@@ -78,7 +78,7 @@ exclude = [
     "node_modules",
     "venv",
 ]
-line-length = 88
+line-length = 120
 target-version = "py311"
 
 [tool.ruff.flake8-annotations]
