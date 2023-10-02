@@ -109,3 +109,8 @@ How to build sphinx docs?
 
     source ./.venv/bin/activate
     cd docs && make clean && make html && cd ../
+    cd docs
+    find . -maxdepth 1 -type d -not -name 'build' -not -name 'source' -not -name '.' -print0 | xargs -0 rm -rf --
+    find . -maxdepth 1 -type f -not -name '.README.md' -not -name 'make.bat' -not -name 'Makefile' -not -name '.' -print0 | xargs -0 rm -rf --
+    cd ../
+    cp -R ./docs/build/html/* ./docs
