@@ -37,6 +37,7 @@ packages = [
     { include = "bc_configs" },
 ]
 
+
 [tool.poetry.dependencies]
 python = "^3.11"
 pydantic = "^2.3.0"
@@ -52,11 +53,32 @@ sphinx = "6.2.1"
 sphinx-book-theme = "^1.0.1"
 sphinx-rtd-theme = "^1.3.0"
 
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
 
+
 [tool.ruff]
+select = [
+    # "D",  # pydocstyle  # can't use with reSt docstrings
+    "E",  # pycodestyle errors
+    "W",  # pycodestyle warnings
+    "F",  # pyflakes
+    "I",  # isort
+    "C",  # flake8-comprehensions
+    "B",  # flake8-bugbear
+    "Q",  # flake8-quotes
+    "SIM",  # flake8-simplify
+    "SLF",  # flake8-self
+    "RET",  # flake8-return
+    "FLY",  # https://docs.astral.sh/ruff/rules/#flynt-fly
+    "RUF",  # https://docs.astral.sh/ruff/rules/#ruff-specific-rules-ruf
+    "FBT",  # https://docs.astral.sh/ruff/rules/#flake8-boolean-trap-fbt
+    "DTZ",  # https://docs.astral.sh/ruff/rules/#flake8-datetimez-dtz
+    "COM",  # https://docs.astral.sh/ruff/rules/#flake8-commas-com
+    "ANN",  # https://docs.astral.sh/ruff/rules/#flake8-commas-com
+]
 fixable = ["ALL"]
 exclude = [
     ".bzr",
@@ -83,9 +105,11 @@ exclude = [
 ]
 line-length = 120
 target-version = "py311"
+ignore = ["ANN101"]
 
 [tool.ruff.flake8-annotations]
 mypy-init-return = true
+
 
 [tool.ruff.extend-per-file-ignores]
 "__init__.py" = ["F401"]

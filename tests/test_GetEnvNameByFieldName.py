@@ -1,5 +1,7 @@
 import unittest
+
 from bc_configs.configurator.BaseConfig import _get_env_name_by_field_name
+
 
 class TestGetEnvNameByFieldName(unittest.TestCase):
     def test_case_1(self) -> None:
@@ -14,5 +16,6 @@ class TestGetEnvNameByFieldName(unittest.TestCase):
         result = _get_env_name_by_field_name("SomeClass", "some_field")
         self.assertEqual(result, "SOME_CLASS_SOME_FIELD")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     unittest.main()

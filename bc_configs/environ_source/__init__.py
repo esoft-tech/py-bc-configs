@@ -21,5 +21,5 @@ If you wanna use it, please that in your main src `__init__.py` file.
 """
 
 from .define import define
-from .VaultConfig import VaultConfig
 from .EnvironSourceException import EnvironSourceException
+from .VaultConfig import VaultConfig

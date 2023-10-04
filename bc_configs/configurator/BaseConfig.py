@@ -1,4 +1,3 @@
-
 import os
 import re
 from abc import ABC
@@ -24,11 +23,8 @@ def _get_env_name_by_field_name(class_name: str, field_name: str) -> str:
     return "_".join(
         [
             i.replace("_", "").upper()
-            for i in re.findall(
-                r"[A-ZА-Я_][a-zа-я\d]*",
-                f'{class_name.replace("Config", "")}_{field_name}'
-            )
-         ],
+            for i in re.findall(r"[A-ZА-Я_][a-zа-я\d]*", f'{class_name.replace("Config", "")}_{field_name}')  # noqa: RUF001, E501 Ignore cyrillic characters
+        ],
     )
 
 
@@ -36,7 +32,7 @@ def _get_field_form_env(
     *,
     class_name: str | None = None,
     field_name: str | None = None,
-    env_name: str | None = None
+    env_name: str | None = None,
 ) -> any:  # type: ignore[valid-type]
     """
     Get the value of a field from the environment variables.
@@ -58,12 +54,15 @@ def _get_field_form_env(
     :rtype: any
     :raises TypeError: If the key type for the variable is invalid.
     """
+    result = None
     if isinstance(env_name, str):
-        return os.getenv(env_name)
+        result = os.getenv(env_name)
     elif isinstance(class_name, str) and isinstance(field_name, str):
-        return os.getenv(_get_env_name_by_field_name(class_name, field_name))
+        result = os.getenv(_get_env_name_by_field_name(class_name, field_name))
     else:
         raise TypeError("Invalid key type for variable")
+
+    return result
 
 
 class BaseConfig(BaseModel, ABC):
@@ -91,8 +90,7 @@ class BaseConfig(BaseModel, ABC):
                 value = _get_field_form_env(
                     class_name=cls.__name__,
                     field_name=k,
-                    env_name=(field.json_schema_extra
-                              or {}).get("env_name")  # type: ignore[union-attr]
+                    env_name=(field.json_schema_extra or {}).get("env_name"),  # type: ignore[union-attr]
                 )
                 if value is not None:
                     values[k] = value

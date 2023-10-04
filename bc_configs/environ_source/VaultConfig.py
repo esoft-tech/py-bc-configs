@@ -1,4 +1,5 @@
 from pydantic import Field
+
 from ..configurator import BaseConfig
 
 
@@ -8,34 +9,22 @@ class VaultConfig(BaseConfig):
     """
 
     #: The address of the Vault server.
-    address: str | None = Field(
-        default=None,
-        description="The address of the Vault server."
-    )
+    address: str | None = Field(default=None, description="The address of the Vault server.")
     #: The mount point of the Vault server.
-    mount: str | None = Field(
-        default=None,
-        description="The mount point of the Vault server."
-    )
+    mount: str | None = Field(default=None, description="The mount point of the Vault server.")
     #: The path to the secret in the Vault.
-    path: str | None = Field(
-        default=None,
-        description="The path to the secret in the Vault."
-    )
+    path: str | None = Field(default=None, description="The path to the secret in the Vault.")
     #: The authentication token for accessing the Vault.
-    token: str | None = Field(
-        default=None,
-        description="The authentication token for accessing the Vault."
-    )
+    token: str | None = Field(default=None, description="The authentication token for accessing the Vault.")
     #: The username for authentication (if token is not provided).
     username: str | None = Field(
         default=None,
-        description="The username for authentication (if token is not provided)."
+        description="The username for authentication (if token is not provided).",
     )
     #: The password for authentication (if token is not provided).
     password: str | None = Field(
         default=None,
-        description="The password for authentication (if token is not provided)."
+        description="The password for authentication (if token is not provided).",
     )
 
     def need_to_use(self) -> bool:

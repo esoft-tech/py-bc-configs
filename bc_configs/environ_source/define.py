@@ -31,7 +31,7 @@ def _dotenv_define() -> None:
     as it allows you to define environment variables
     in a .env file and have them automatically loaded into your application.
     """
-    if importlib.find_loader('dotenv'):
+    if importlib.find_loader("dotenv"):
         from dotenv import load_dotenv  # type: ignore[import]
 
         load_dotenv()
@@ -48,12 +48,12 @@ def _vault_define(config: VaultConfig | None = None) -> None:
     """
     config = config or VaultConfig()
     if config.need_to_use():
-        if importlib.find_loader('hvac'):
+        if importlib.find_loader("hvac"):
             import hvac  # type: ignore[import]
         else:
             raise EnvironSourceException(
                 "hvac is not installed but you are trying to use Vault for config. "
-                "Please install hvac module `pip install hvac`."
+                "Please install hvac module `pip install hvac`.",
             )
 
         if config.has_filled_connect_fields():
@@ -61,18 +61,14 @@ def _vault_define(config: VaultConfig | None = None) -> None:
             if config.token:
                 vault_client.token = config.token
             elif config.username and config.password:
-                vault_client.auth.ldap.login(
-                    username=config.username,
-                    password=config.password
-                )
+                vault_client.auth.ldap.login(username=config.username, password=config.password)
 
-            vault_secrets = vault_client.secrets.kv.v2.read_secret(
-                mount_point=config.mount,
-                path=config.path
-            )['data']['data']
+            vault_secrets = vault_client.secrets.kv.v2.read_secret(mount_point=config.mount, path=config.path)["data"][
+                "data"
+            ]
 
             for k, v in vault_secrets.items():
                 if k not in os.environ:
                     os.environ.update(**{k: str(v)})
         else:
-            raise EnvironSourceException('There is no data to connect to Vault')
+            raise EnvironSourceException("There is no data to connect to Vault")

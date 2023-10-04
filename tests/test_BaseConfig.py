@@ -17,12 +17,15 @@ class TestBaseConfig(unittest.TestCase):
             field4: bool
 
         # Mock the os.environ dictionary with the desired values
-        with patch.dict(os.environ, {
-            "CUSTOM_FIELD1": "value1",
-            "CUSTOM_FIELD2": "42",
-            "CUSTOM_FIELD3": "3.14",
-            "CUSTOM_FIELD4": "True"
-        }):
+        with patch.dict(
+            os.environ,
+            {
+                "CUSTOM_FIELD1": "value1",
+                "CUSTOM_FIELD2": "42",
+                "CUSTOM_FIELD3": "3.14",
+                "CUSTOM_FIELD4": "True",
+            },
+        ):
             # Create an instance of the custom configuration class
             config = CustomConfig()  # type: ignore[call-arg]
 
@@ -45,8 +48,8 @@ class TestBaseConfig(unittest.TestCase):
                 _ = CustomConfig()  # type: ignore[call-arg]
 
             # Check if the correct error message is raised
-            self.assertEqual(1, len(context.exception.errors()[0]['loc']))
-            self.assertEqual("field2", context.exception.errors()[0]['loc'][0])
+            self.assertEqual(1, len(context.exception.errors()[0]["loc"]))
+            self.assertEqual("field2", context.exception.errors()[0]["loc"][0])
 
     def test_custom_env_var_name(self) -> None:
         # Create an instance of the custom configuration class that extends BaseConfig
