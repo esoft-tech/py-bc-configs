@@ -113,3 +113,17 @@ mypy-init-return = true
 
 [tool.ruff.extend-per-file-ignores]
 "__init__.py" = ["F401"]
+
+
+[tool.mypy]
+python_version = 3.11
+warn_return_any = true
+plugins = [
+    "pydantic.mypy",
+]
+disallow_untyped_defs = true
+strict_equality = true
+
+exclude = [
+    "^docs/*",
+]
