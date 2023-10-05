@@ -6,6 +6,7 @@
   <title>bc_configs.environ_source.VaultConfig &mdash; bc_configs • Make configurations easy 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/autodoc_pydantic.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/favicon.png"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
@@ -72,6 +73,7 @@
 
   <h1>Source code for bc_configs.environ_source.VaultConfig</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span>
+
 <span class="kn">from</span> <span class="nn">..configurator</span> <span class="kn">import</span> <span class="n">BaseConfig</span>
 
 
@@ -80,35 +82,17 @@
 <span class="sd">    Configuration for HashiCorp Vault.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1">#: The address of the Vault server.</span>
-    <span class="n">address</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The address of the Vault server.&quot;</span>
-    <span class="p">)</span>
-    <span class="c1">#: The mount point of the Vault server.</span>
-    <span class="n">mount</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The mount point of the Vault server.&quot;</span>
-    <span class="p">)</span>
-    <span class="c1">#: The path to the secret in the Vault.</span>
-    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The path to the secret in the Vault.&quot;</span>
-    <span class="p">)</span>
-    <span class="c1">#: The authentication token for accessing the Vault.</span>
-    <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The authentication token for accessing the Vault.&quot;</span>
-    <span class="p">)</span>
-    <span class="c1">#: The username for authentication (if token is not provided).</span>
+    <span class="n">address</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The address of the Vault server.&quot;</span><span class="p">)</span>
+    <span class="n">mount</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The mount point of the Vault server.&quot;</span><span class="p">)</span>
+    <span class="n">path</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The path to the secret in the Vault.&quot;</span><span class="p">)</span>
+    <span class="n">token</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The authentication token for accessing the Vault.&quot;</span><span class="p">)</span>
     <span class="n">username</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The username for authentication (if token is not provided).&quot;</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The username for authentication (if token is not provided).&quot;</span><span class="p">,</span>
     <span class="p">)</span>
-    <span class="c1">#: The password for authentication (if token is not provided).</span>
     <span class="n">password</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The password for authentication (if token is not provided).&quot;</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The password for authentication (if token is not provided).&quot;</span><span class="p">,</span>
     <span class="p">)</span>
 
 <div class="viewcode-block" id="VaultConfig.need_to_use"><a class="viewcode-back" href="../../../bc_configs.environ_source.html#bc_configs.environ_source.VaultConfig.VaultConfig.need_to_use">[docs]</a>    <span class="k">def</span> <span class="nf">need_to_use</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>

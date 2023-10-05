@@ -37,6 +37,7 @@ If you want contributing
 
 - Check that ruff passed.
 - Check that mypy passed.
+- Before adding or changing the functionality, write unittests.
 - Check that unittests passed.
 
 If you need to build and publish the package

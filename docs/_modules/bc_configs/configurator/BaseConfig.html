@@ -6,6 +6,7 @@
   <title>bc_configs.configurator.BaseConfig &mdash; bc_configs • Make configurations easy 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/autodoc_pydantic.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/favicon.png"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
@@ -71,8 +72,7 @@
            <div itemprop="articleBody">
 
   <h1>Source code for bc_configs.configurator.BaseConfig</h1><div class="highlight"><pre>
-<span></span>
-<span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">ABC</span>
 
@@ -97,11 +97,8 @@
     <span class="k">return</span> <span class="s2">&quot;_&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
         <span class="p">[</span>
             <span class="n">i</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span>
-                <span class="sa">r</span><span class="s2">&quot;[A-ZА-Я_][a-zа-я\d]*&quot;</span><span class="p">,</span>
-                <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">class_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Config&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s1">&#39;</span>
-            <span class="p">)</span>
-         <span class="p">],</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">re</span><span class="o">.</span><span class="n">findall</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;[A-ZА-Я_][a-zа-я\d]*&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">class_name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;Config&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>  <span class="c1"># noqa: RUF001, E501 Ignore cyrillic characters</span>
+        <span class="p">],</span>
     <span class="p">)</span>
 
 
@@ -109,7 +106,7 @@
     <span class="o">*</span><span class="p">,</span>
     <span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">env_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">env_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">any</span><span class="p">:</span>  <span class="c1"># type: ignore[valid-type]</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Get the value of a field from the environment variables.</span>
@@ -131,12 +128,15 @@
 <span class="sd">    :rtype: any</span>
 <span class="sd">    :raises TypeError: If the key type for the variable is invalid.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">env_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">env_name</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field_name</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">_get_env_name_by_field_name</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="n">_get_env_name_by_field_name</span><span class="p">(</span><span class="n">class_name</span><span class="p">,</span> <span class="n">field_name</span><span class="p">))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Invalid key type for variable&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">result</span>
 
 
 <div class="viewcode-block" id="BaseConfig"><a class="viewcode-back" href="../../../bc_configs.configurator.html#bc_configs.configurator.BaseConfig.BaseConfig">[docs]</a><span class="k">class</span> <span class="nc">BaseConfig</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">,</span> <span class="n">ABC</span><span class="p">):</span>
@@ -164,8 +164,7 @@
                 <span class="n">value</span> <span class="o">=</span> <span class="n">_get_field_form_env</span><span class="p">(</span>
                     <span class="n">class_name</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
                     <span class="n">field_name</span><span class="o">=</span><span class="n">k</span><span class="p">,</span>
-                    <span class="n">env_name</span><span class="o">=</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">json_schema_extra</span>
-                              <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env_name&quot;</span><span class="p">)</span>  <span class="c1"># type: ignore[union-attr]</span>
+                    <span class="n">env_name</span><span class="o">=</span><span class="p">(</span><span class="n">field</span><span class="o">.</span><span class="n">json_schema_extra</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env_name&quot;</span><span class="p">),</span>  <span class="c1"># type: ignore[union-attr]</span>
                 <span class="p">)</span>
                 <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">values</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>

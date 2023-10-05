@@ -6,6 +6,7 @@
   <title>bc_configs.environ_source.define &mdash; bc_configs • Make configurations easy 0.1.0 documentation</title>
       <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../../_static/autodoc_pydantic.css" type="text/css" />
     <link rel="shortcut icon" href="../../../_static/favicon.png"/>
   <!--[if lt IE 9]>
     <script src="../../../_static/js/html5shiv.min.js"></script>
@@ -104,7 +105,7 @@
 <span class="sd">    as it allows you to define environment variables</span>
 <span class="sd">    in a .env file and have them automatically loaded into your application.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">find_loader</span><span class="p">(</span><span class="s1">&#39;dotenv&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">find_loader</span><span class="p">(</span><span class="s2">&quot;dotenv&quot;</span><span class="p">):</span>
         <span class="kn">from</span> <span class="nn">dotenv</span> <span class="kn">import</span> <span class="n">load_dotenv</span>  <span class="c1"># type: ignore[import]</span>
 
         <span class="n">load_dotenv</span><span class="p">()</span>
@@ -121,12 +122,12 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">config</span> <span class="ow">or</span> <span class="n">VaultConfig</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">need_to_use</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">find_loader</span><span class="p">(</span><span class="s1">&#39;hvac&#39;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">importlib</span><span class="o">.</span><span class="n">find_loader</span><span class="p">(</span><span class="s2">&quot;hvac&quot;</span><span class="p">):</span>
             <span class="kn">import</span> <span class="nn">hvac</span>  <span class="c1"># type: ignore[import]</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="k">raise</span> <span class="n">EnvironSourceException</span><span class="p">(</span>
                 <span class="s2">&quot;hvac is not installed but you are trying to use Vault for config. &quot;</span>
-                <span class="s2">&quot;Please install hvac module `pip install hvac`.&quot;</span>
+                <span class="s2">&quot;Please install hvac module `pip install hvac`.&quot;</span><span class="p">,</span>
             <span class="p">)</span>
 
         <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">has_filled_connect_fields</span><span class="p">():</span>
@@ -134,21 +135,17 @@
             <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">token</span><span class="p">:</span>
                 <span class="n">vault_client</span><span class="o">.</span><span class="n">token</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">token</span>
             <span class="k">elif</span> <span class="n">config</span><span class="o">.</span><span class="n">username</span> <span class="ow">and</span> <span class="n">config</span><span class="o">.</span><span class="n">password</span><span class="p">:</span>
-                <span class="n">vault_client</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">ldap</span><span class="o">.</span><span class="n">login</span><span class="p">(</span>
-                    <span class="n">username</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">username</span><span class="p">,</span>
-                    <span class="n">password</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">password</span>
-                <span class="p">)</span>
+                <span class="n">vault_client</span><span class="o">.</span><span class="n">auth</span><span class="o">.</span><span class="n">ldap</span><span class="o">.</span><span class="n">login</span><span class="p">(</span><span class="n">username</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">username</span><span class="p">,</span> <span class="n">password</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">password</span><span class="p">)</span>
 
-            <span class="n">vault_secrets</span> <span class="o">=</span> <span class="n">vault_client</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">kv</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">read_secret</span><span class="p">(</span>
-                <span class="n">mount_point</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">mount</span><span class="p">,</span>
-                <span class="n">path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">path</span>
-            <span class="p">)[</span><span class="s1">&#39;data&#39;</span><span class="p">][</span><span class="s1">&#39;data&#39;</span><span class="p">]</span>
+            <span class="n">vault_secrets</span> <span class="o">=</span> <span class="n">vault_client</span><span class="o">.</span><span class="n">secrets</span><span class="o">.</span><span class="n">kv</span><span class="o">.</span><span class="n">v2</span><span class="o">.</span><span class="n">read_secret</span><span class="p">(</span><span class="n">mount_point</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">mount</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">config</span><span class="o">.</span><span class="n">path</span><span class="p">)[</span><span class="s2">&quot;data&quot;</span><span class="p">][</span>
+                <span class="s2">&quot;data&quot;</span>
+            <span class="p">]</span>
 
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">vault_secrets</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">:</span>
                     <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">v</span><span class="p">)})</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="n">EnvironSourceException</span><span class="p">(</span><span class="s1">&#39;There is no data to connect to Vault&#39;</span><span class="p">)</span>
+            <span class="k">raise</span> <span class="n">EnvironSourceException</span><span class="p">(</span><span class="s2">&quot;There is no data to connect to Vault&quot;</span><span class="p">)</span>
 </pre></div>
 
            </div>
