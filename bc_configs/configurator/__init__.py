@@ -102,3 +102,5 @@ If you want to define default values for the fields, you can define Field with d
 '''
 
 from .BaseConfig import BaseConfig
+
+__all__ = ["BaseConfig"]
