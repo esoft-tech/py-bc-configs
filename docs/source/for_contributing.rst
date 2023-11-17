@@ -97,7 +97,7 @@ Publish the package.
     Make a release with notes about changes.
 
 
-How to generate badgets?
+How to generate badges?
 -------------------------
 
 
@@ -105,9 +105,9 @@ Just exec that command.
 
 .. code:: bash
 
-    ./.venv/bin/python ./.bc/badgets.py
+    ./.venv/bin/python ./.bc/badges.py
 
-Then all badgets actualize ourselves.
+Then all badges actualize ourselves.
 
 
 How to build sphinx docs?
