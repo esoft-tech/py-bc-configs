@@ -23,7 +23,7 @@ def _get_env_name_by_field_name(class_name: str, field_name: str) -> str:
     return "_".join(
         [
             i.replace("_", "").upper()
-            for i in re.findall(r"[A-ZА-Я_][a-zа-я\d]*", f'{class_name.replace("Config", "")}_{field_name}')  # noqa: RUF001, E501 Ignore cyrillic characters
+            for i in re.findall(r"[A-ZА-Я_][a-zа-я\d]*", f'{class_name.replace("Config", "")}_{field_name}')  # noqa: RUF001 Ignore cyrillic characters
         ],
     )
 
@@ -90,7 +90,7 @@ class BaseConfig(BaseModel, ABC):
                 value = _get_field_form_env(
                     class_name=cls.__name__,
                     field_name=k,
-                    env_name=(field.json_schema_extra or {}).get("env_name"),  # type: ignore[union-attr]
+                    env_name=(field.json_schema_extra or {}).get("env_name"),  # type: ignore
                 )
                 if value is not None:
                     values[k] = value

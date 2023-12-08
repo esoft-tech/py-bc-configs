@@ -54,6 +54,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#casting-the-environment-variable-value">Casting the environment variable value</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#optional-fields">Optional fields</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#default-values">Default values</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bc_configs.configurator.BaseConfig"><code class="docutils literal notranslate"><span class="pre">BaseConfig</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#module-bc_configs.configurator.BaseConfig">BaseConfig</a><ul>
@@ -63,6 +64,10 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="bc_configs.environ_source.html">Environ Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc_configs.html#bc_configs.BaseConfig"><code class="docutils literal notranslate"><span class="pre">BaseConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc_configs.html#bc_configs.EnvironSourceException"><code class="docutils literal notranslate"><span class="pre">EnvironSourceException</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc_configs.html#bc_configs.VaultConfig"><code class="docutils literal notranslate"><span class="pre">VaultConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="bc_configs.html#bc_configs.define"><code class="docutils literal notranslate"><span class="pre">define()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="for_contributing.html">For contributing</a></li>
@@ -187,6 +192,23 @@ pydantic model. For use, create child class of <cite>BaseConfig</cite> and decla
 </pre></div>
 </div>
 </section>
+<dl class="py class pydantic_model">
+<dt class="sig sig-object py" id="bc_configs.configurator.BaseConfig">
+<em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">bc_configs.configurator.</span></span><span class="sig-name descname"><span class="pre">BaseConfig</span></span><a class="reference internal" href="_modules/bc_configs/configurator/BaseConfig.html#BaseConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#bc_configs.configurator.BaseConfig" title="Permalink to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
+<p>Provides to receive values from the environment variables on the validation step of
+pydantic model.</p>
+<p><details  class="autodoc_pydantic_collapsable_json">
+<summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BaseConfig&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Provides to receive values from the environment variables on the validation step of\npydantic model.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</details></p></dd></dl>
+
 </section>
 <section id="module-bc_configs.configurator.BaseConfig">
 <span id="baseconfig"></span><h2>BaseConfig<a class="headerlink" href="#module-bc_configs.configurator.BaseConfig" title="Permalink to this heading"></a></h2>

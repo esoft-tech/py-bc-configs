@@ -1,5 +1,5 @@
-import importlib
 import os
+import sys
 
 from .EnvironSourceException import EnvironSourceException
 from .VaultConfig import VaultConfig
@@ -31,7 +31,7 @@ def _dotenv_define() -> None:
     as it allows you to define environment variables
     in a .env file and have them automatically loaded into your application.
     """
-    if importlib.find_loader("dotenv"):
+    if "dotenv" in sys.modules:
         from dotenv import load_dotenv  # type: ignore[import]
 
         load_dotenv()
@@ -48,7 +48,7 @@ def _vault_define(config: VaultConfig | None = None) -> None:
     """
     config = config or VaultConfig()
     if config.need_to_use():
-        if importlib.find_loader("hvac"):
+        if "hvac" in sys.modules:
             import hvac  # type: ignore[import]
         else:
             raise EnvironSourceException(
