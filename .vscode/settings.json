@@ -3,8 +3,8 @@
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
-      "source.fixAll": true,
-      "source.organizeImports.ruff": true
+      "source.fixAll": "explicit",
+      "source.organizeImports.ruff": "explicit"
     }
   },
   "python.testing.unittestArgs": ["-v", "-s", "./tests", "-p", "test_*.py"],

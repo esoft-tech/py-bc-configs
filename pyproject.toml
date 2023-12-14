@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bc-configs"
-version = "0.1.5"
+version = "0.1.6"
 description = "Configuration module, that provides a way to manage configs structure, validation and casting to type inside your code. Based on pedantic models. Additionally it can automatically getting config from environment variables, .env, HashiCorp Vault, etc."
 authors = [
     "Artem Shirokikh <job@artemetr.ru>",
