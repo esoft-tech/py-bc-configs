@@ -7,61 +7,56 @@ on:
       - main
 
 jobs:
-  build:
+  lint:
     runs-on: ubuntu-latest
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v3
-      - name: Set up Python
-        id: setup-python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.13'
-          cache: 'uv'
+      - uses: actions/checkout@v4
+
       - name: Install uv
-        run: pip install uv
-      - name: Install dependencies with uv
-        run: uv sync
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+
+      - name: "Set up Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version-file: ".python-version"
+          enable-cache: true
+
+      - name: Install the project
+        run: uv sync --locked --all-extras --dev
+        with:
+          python-version-file: ".python-version"
+          enable-cache: true
 
       - name: Run ruff
-        run: ruff check .
+        run: uv run ruff check .
 
       - name: Run coverage
         run: |
-          coverage run --omit="*test_*.py" -m unittest discover --pattern="*test_*.py"
-          coverage report
+          uv run coverage run --omit="*test_*.py" -m unittest discover --pattern="*test_*.py"
+          uv run coverage report
 
       - name: Run mypy
-        run: mypy .
+        run: uv run mypy .
 
-  deploy-docs:
-    needs: build
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
+  deploy:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
-      # - name: Set up Python
-      #   uses: actions/setup-python@v4
-      #   with:
-      #     python-version: '3.13'
-      #     cache: 'uv'
-      # - name: Install uv
-      #   run: pip install uv
-      # - name: Install dependencies for docs
-      #   run: uv sync
-      # - name: Build documentation
-      #   run: bash .bc/build_docs.sh
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: docs/build/html
+          path: './docs/build/html'
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
