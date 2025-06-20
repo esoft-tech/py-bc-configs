@@ -1,3 +1,9 @@
+# /// script
+# dependencies = [
+#   "genbadge[all]"
+# ]
+# ///
+
 import os
 
 from genbadge import Badge

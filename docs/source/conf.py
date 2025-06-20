@@ -12,10 +12,10 @@ import sys
 sys.path.insert(0, os.path.abspath(os.path.join("..", "..")))
 
 
-project = "bc_configs • Make configurations easy"
-copyright = "2023, Artem Shirokikh <job@artemetr.ru>, Esoft <it@esoft.tech>"
-author = "Artem Shirokikh <job@artemetr.ru>, Esoft <it@esoft.tech>"
-release = "0.1.0"
+project = "bc-configs • Make configurations easy"
+copyright = "2025, Artem Shirokikh (job@artemetr.ru), Esoft (it@esoft.tech)"
+author = "Artem Shirokikh (job@artemetr.ru), Esoft (it@esoft.tech)"
+release = "0.2.0"
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

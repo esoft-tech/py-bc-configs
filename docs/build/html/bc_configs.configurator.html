@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Configurator &mdash; bc_configs • Make configurations easy 0.1.0 documentation</title>
+  <title>Configurator &mdash; bc-configs • Make configurations easy 0.2.0 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/autodoc_pydantic.css" type="text/css" />
@@ -12,7 +12,7 @@
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
-
+  
         <script src="_static/jquery.js"></script>
         <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
@@ -22,19 +22,19 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Environ Source" href="bc_configs.environ_source.html" />
-    <link rel="prev" title="Module documentation" href="bc_configs.html" />
+    <link rel="prev" title="Module documentation" href="bc_configs.html" /> 
 </head>
 
-<body class="wy-body-for-nav">
+<body class="wy-body-for-nav"> 
   <div class="wy-grid-for-nav">
     <nav data-toggle="wy-nav-shift" class="wy-nav-side">
       <div class="wy-side-scroll">
         <div class="wy-side-nav-search" >
 
-
-
+          
+          
           <a href="index.html" class="icon icon-home">
-            bc_configs • Make configurations easy
+            bc-configs • Make configurations easy
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -79,7 +79,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">bc_configs • Make configurations easy</a>
+          <a href="index.html">bc-configs • Make configurations easy</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -97,7 +97,7 @@
 </div>
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
-
+             
   <section id="configurator">
 <h1>Configurator<a class="headerlink" href="#configurator" title="Permalink to this heading"></a></h1>
 <section id="module-bc_configs.configurator">
@@ -105,7 +105,7 @@
 <p>Module with BaseConfig. That config is the main element of <cite>bc_configs</cite>.
 It provides to receive values from the environment variables on the validation step of
 pydantic model. For use, create child class of <cite>BaseConfig</cite> and declare needed fields with typehint.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
     <span class="n">my_field</span><span class="p">:</span> <span class="nb">str</span>
 
 
@@ -131,10 +131,10 @@ pydantic model. For use, create child class of <cite>BaseConfig</cite> and decla
 <section id="customizing-the-environment-variable-name">
 <h3>Customizing the environment variable name<a class="headerlink" href="#customizing-the-environment-variable-name" title="Permalink to this heading"></a></h3>
 <p>If you want to customize the environment variable name, you can define it in <cite>field→json_schema_extra→env_name</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
 
 
-<span class="k">class</span> <span class="nc">FooConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FooConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
     <span class="n">bar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">json_schema_extra</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;env_name&quot;</span><span class="p">:</span> <span class="s2">&quot;CUSTOM_ENV_NAME&quot;</span><span class="p">})</span>
 </pre></div>
 </div>
@@ -142,7 +142,7 @@ pydantic model. For use, create child class of <cite>BaseConfig</cite> and decla
 <section id="casting-the-environment-variable-value">
 <h3>Casting the environment variable value<a class="headerlink" href="#casting-the-environment-variable-value" title="Permalink to this heading"></a></h3>
 <p>If you want to cast the environment variable value, you can define field typehint.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">FooConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">FooConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
     <span class="n">bar</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">baz</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">foo</span><span class="p">:</span> <span class="nb">bool</span>
@@ -159,10 +159,10 @@ pydantic model. For use, create child class of <cite>BaseConfig</cite> and decla
 <section id="optional-fields">
 <h3>Optional fields<a class="headerlink" href="#optional-fields" title="Permalink to this heading"></a></h3>
 <p>If you want to make the field optional, you can define field typehint with <cite>| None</cite>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 
 
-<span class="k">class</span> <span class="nc">FooConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FooConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
     <span class="n">bar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span>
 
 
@@ -180,11 +180,11 @@ pydantic model. For use, create child class of <cite>BaseConfig</cite> and decla
 <section id="default-values">
 <h3>Default values<a class="headerlink" href="#default-values" title="Permalink to this heading"></a></h3>
 <p>If you want to define default values for the fields, you can define Field with default value argument.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">Field</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Field</span>
 
 
-<span class="k">class</span> <span class="nc">FooConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">FooConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
     <span class="n">bar</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="s2">&quot;default value&quot;</span><span class="p">)</span>
 
 <span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;FOO_BAR&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span>  <span class="c1"># True</span>
@@ -207,7 +207,14 @@ pydantic model.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</details></p></dd></dl>
+</details></p><dl class="field-list simple">
+<dt class="field-odd">Validators<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_populate_from_env</span></code> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="module-bc_configs.configurator.BaseConfig">
@@ -227,7 +234,14 @@ pydantic model.</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-</details></p></dd></dl>
+</details></p><dl class="field-list simple">
+<dt class="field-odd">Validators<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_populate_from_env</span></code> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 </section>
@@ -243,13 +257,13 @@ pydantic model.</p>
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Artem Shirokikh &lt;job@artemetr.ru&gt;, Esoft &lt;it@esoft.tech&gt;.</p>
+    <p>&#169; Copyright 2025, Artem Shirokikh (job@artemetr.ru), Esoft (it@esoft.tech).</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
     <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
     provided by <a href="https://readthedocs.org">Read the Docs</a>.
-
+   
 
 </footer>
         </div>
@@ -260,7 +274,7 @@ pydantic model.</p>
       jQuery(function () {
           SphinxRtdTheme.Navigation.enable(true);
       });
-  </script>
+  </script> 
 
 </body>
 </html>

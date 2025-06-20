@@ -1,8 +1,9 @@
 import os
 import re
 from abc import ABC
+from typing import Any, cast
 
-from pydantic import BaseModel, root_validator
+from pydantic import BaseModel, model_validator
 
 
 def _get_env_name_by_field_name(class_name: str, field_name: str) -> str:
@@ -23,7 +24,7 @@ def _get_env_name_by_field_name(class_name: str, field_name: str) -> str:
     return "_".join(
         [
             i.replace("_", "").upper()
-            for i in re.findall(r"[A-ZА-Я_][a-zа-я\d]*", f'{class_name.replace("Config", "")}_{field_name}')  # noqa: RUF001 Ignore cyrillic characters
+            for i in re.findall(r"[A-ZА-Я_][a-zа-я\d]*", f"{class_name.replace('Config', '')}_{field_name}")  # noqa: RUF001
         ],
     )
 
@@ -33,7 +34,7 @@ def _get_field_form_env(
     class_name: str | None = None,
     field_name: str | None = None,
     env_name: str | None = None,
-) -> any:  # type: ignore[valid-type]
+) -> Any:
     """
     Get the value of a field from the environment variables.
 
@@ -51,7 +52,7 @@ def _get_field_form_env(
     :param env_name: The name of the environment variable.
     :type env_name: str, optional
     :return: The value of the field from the environment variables.
-    :rtype: any
+    :rtype: Any
     :raises TypeError: If the key type for the variable is invalid.
     """
     result = None
@@ -71,10 +72,11 @@ class BaseConfig(BaseModel, ABC):
     pydantic model.
     """
 
-    @root_validator(pre=True)
-    def _change_form_env_if_none(cls, values: dict) -> dict:
+    @model_validator(mode="before")
+    @classmethod
+    def _populate_from_env(cls, data: dict) -> Any:
         """
-        This function checks if any value in the 'values' dictionary is None.
+        This function checks if any value in the input `data` dictionary is None.
         If a value is None, it retrieves the value from the environment variables
         based on the class name and field name.
 
@@ -85,14 +87,20 @@ class BaseConfig(BaseModel, ABC):
         :return: The updated dictionary of values that will be stored in config instance.
         :rtype: dict
         """
-        for k, field in cls.model_fields.items():
-            if values.get(k) is None:
+        for field_name, field_info in cls.model_fields.items():
+            if data.get(field_name) is None:
+                if not isinstance(field_info.json_schema_extra, dict) and field_info.json_schema_extra is not None:
+                    raise ValueError(
+                        f"Unexpected {cls.__name__}.{field_name} json_schema_extra type: {type(field_info.json_schema_extra).__name__}",  # noqa: E501
+                    )
+                env_name = cast(str, (field_info.json_schema_extra or {}).get("env_name"))
+
                 value = _get_field_form_env(
                     class_name=cls.__name__,
-                    field_name=k,
-                    env_name=(field.json_schema_extra or {}).get("env_name"),  # type: ignore
+                    field_name=field_name,
+                    env_name=env_name,
                 )
                 if value is not None:
-                    values[k] = value
+                    data[field_name] = value
 
-        return values
+        return data

@@ -1,4 +1,4 @@
-'''
+"""
 Module with BaseConfig. That config is the main element of `bc_configs`.
 It provides to receive values from the environment variables on the validation step of
 pydantic model. For use, create child class of `BaseConfig` and declare needed fields with typehint.
@@ -99,7 +99,7 @@ If you want to define default values for the fields, you can define Field with d
     assert os.getenv("FOO_BAR") is None  # True
     assert foo_config.bar == "default value"  # True
 
-'''
+"""
 
 from .BaseConfig import BaseConfig
 
