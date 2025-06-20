@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to bc_configs’s documentation! &mdash; bc-configs • Make configurations easy 0.2.1 documentation</title>
+  <title>Welcome to bc-configs’s documentation! &mdash; bc-configs • Make configurations easy 0.2.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/autodoc_pydantic.css" type="text/css" />
@@ -63,7 +63,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Welcome to bc_configs’s documentation!</li>
+      <li class="breadcrumb-item active">Welcome to bc-configs’s documentation!</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
       </li>
@@ -74,8 +74,48 @@
            <div itemprop="articleBody">
              
   <section id="welcome-to-bc-configs-s-documentation">
-<h1>Welcome to bc_configs’s documentation!<a class="headerlink" href="#welcome-to-bc-configs-s-documentation" title="Permalink to this heading"></a></h1>
+<h1>Welcome to bc-configs’s documentation!<a class="headerlink" href="#welcome-to-bc-configs-s-documentation" title="Permalink to this heading"></a></h1>
 <p><em>Let’s make your configuration easy.</em></p>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading"></a></h2>
+<p><cite>bc-configs</cite> is a library that makes configuring your applications easier.</p>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading"></a></h2>
+<p>To install, use pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>bc-configs
+</pre></div>
+</div>
+</section>
+<section id="make-your-custom-config-class">
+<h2>Make your custom config class<a class="headerlink" href="#make-your-custom-config-class" title="Permalink to this heading"></a></h2>
+<p>You can create your custom config class by inheriting from <cite>BaseConfig</cite>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">bc_configs</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseConfig</span><span class="p">,</span> <span class="n">define</span>
+
+<span class="n">define</span><span class="p">()</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">MyConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="n">some_int</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">some_string</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">some_bool</span><span class="p">:</span> <span class="nb">bool</span>
+
+<span class="n">my_config</span> <span class="o">=</span> <span class="n">MyConfig</span><span class="p">()</span>  <span class="c1"># type: ignore[call-arg]</span>
+
+<span class="k">assert</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MY_SOME_INT&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="n">my_config</span><span class="o">.</span><span class="n">some_int</span>  <span class="c1"># True</span>
+<span class="k">assert</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MY_SOME_STRING&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">my_config</span><span class="o">.</span><span class="n">some_string</span>  <span class="c1"># True</span>
+<span class="k">assert</span> <span class="nb">bool</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="s2">&quot;MY_SOME_BOOL&quot;</span><span class="p">))</span> <span class="o">==</span> <span class="n">my_config</span><span class="o">.</span><span class="n">some_bool</span>  <span class="c1"># True</span>
+</pre></div>
+</div>
+<p>The name of the environment variable is formed based on the names of the class and field.</p>
+</section>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Permalink to this heading"></a></h2>
+<ul class="simple">
+<li><p>Load environment variables from <cite>.env</cite> files (using <cite>python-dotenv</cite>).</p></li>
+<li><p>Load environment variables from YAML files (e.g., <cite>.env.yml</cite> or custom path via <cite>YAML_CONFIG_FILE</cite> environment variable).</p></li>
+<li><p>Load secrets from HashiCorp Vault (using <cite>hvac</cite>).</p></li>
+</ul>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -98,6 +138,7 @@
 </li>
 </ul>
 </div>
+</section>
 </section>
 <section id="indices-and-tables">
 <h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading"></a></h1>

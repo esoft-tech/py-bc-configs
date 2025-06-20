@@ -15,6 +15,9 @@ def define(*, vault_config: VaultConfig | None = None) -> None:
     # Define environment variables from .env file
     _dotenv_define()
 
+    # Define environment variables from .env.yml file
+    _yaml_define()
+
     # Define configuration for accessing secrets from a vault
     _vault_define(vault_config)
 
@@ -41,28 +44,46 @@ def _dotenv_define() -> None:
 
 def _yaml_define() -> None:
     """
-    Load the yaml module (from pyyaml package) and define environment variables from secrets stored in yaml-file.
+    Load the yaml module (from pyyaml package) and define environment variables from secrets stored in yaml file.
 
     This function checks if the yaml module is available and then imports it.
     It then calls the load_yaml function to load the environment variables
     from the .env.yml file or $YAML_CONFIG_FILE.
     """
 
-    def load_yaml() -> None:
-        file_path = os.getenv("YAML_CONFIG_FILE", ".env.yml")
-        with open(file_path, "r") as f:
-            yaml_secrets = yaml.safe_load(f)
-
-        for k, v in yaml_secrets.items():
-            if k not in os.environ:
-                os.environ.update(**{k: str(v)})
-
     try:
         import yaml  # type: ignore[import]
     except ImportError:
         logging.debug("pyyaml is not installed and will be skipped")
-    else:
-        load_yaml()
+        return
+
+    def load_yaml_from_file(file_path: str) -> None:
+        """
+        Loads environment variables from a YAML file.
+
+        :param file_path: The path to the YAML file.
+        :type file_path: str
+        """
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                yaml_secrets = yaml.safe_load(f)
+            if not isinstance(yaml_secrets, dict):
+                logging.warning(f"YAML file '{file_path}' does not contain a top-level dictionary. Skipping.")
+                return
+
+            for k, v in yaml_secrets.items():
+                if not isinstance(k, str):
+                    logging.warning(f"Key '{k}' in YAML file '{file_path}' is not a string. Skipping.")
+                    continue
+                if k not in os.environ:
+                    os.environ.update(**{k: str(v)})
+                else:
+                    logging.debug(f"Environment variable '{k}' already exists. Skipping loading from YAML file.")
+
+        except FileNotFoundError:
+            logging.debug(f"YAML file '{file_path}' not found. Skipping loading.")
+
+    load_yaml_from_file(os.getenv("YAML_CONFIG_FILE", ".env.yml"))
 
 
 def _vault_define(config: VaultConfig | None = None) -> None:

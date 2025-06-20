@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Environ Source &mdash; bc-configs • Make configurations easy 0.2.1 documentation</title>
+  <title>Environ Source &mdash; bc-configs • Make configurations easy 0.2.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/autodoc_pydantic.css" type="text/css" />
@@ -117,11 +117,25 @@
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>If dotenv installed, it will use the dotenv module and call the load_dotenv function.</p>
+<p>If python-dotenv installed, it will use the dotenv module and call the load_dotenv function.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>If hvac installed, it will use the hvac module and put data form storage to os.environ.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If <cite>pyyaml</cite> is installed, <cite>bc_configs</cite> will attempt to load environment variables
+from a YAML file. By default, it looks for <cite>.env.yml</cite> in the current working directory.
+You can specify a different YAML file by setting the <cite>YAML_CONFIG_FILE</cite> environment variable.
+Variables from the YAML file will be loaded into <cite>os.environ</cite>, but existing environment
+variables will not be overwritten.</p>
+<p>Example <cite>.env.yml</cite> file:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">APP_NAME</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MyAwesomeApp</span>
+<span class="nt">DEBUG_MODE</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">DATABASE_URL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql://user:password@host:port/dbname</span>
+</pre></div>
+</div>
 </div>
 <dl class="py exception">
 <dt class="sig sig-object py" id="bc_configs.environ_source.EnvironSourceException">

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>For contributing &mdash; bc-configs • Make configurations easy 0.2.1 documentation</title>
+  <title>For contributing &mdash; bc-configs • Make configurations easy 0.2.2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
       <link rel="stylesheet" href="_static/autodoc_pydantic.css" type="text/css" />
@@ -90,17 +90,13 @@
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:esoft-tech/py-bc-configs.git
 </pre></div>
 </div>
-<p>Install poetry using the guide from their website – <a class="reference external" href="https://python-poetry.org/docs/#installation">https://python-poetry.org/docs/#installation</a>.</p>
-<p>After installation, apply this in order for poetry to create venv in your project folder.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>config<span class="w"> </span>virtualenvs.in-project<span class="w"> </span><span class="nb">true</span>
-</pre></div>
-</div>
+<p>Install uv using the guide from their website – <a class="reference external" href="https://docs.astral.sh/uv/getting-started/installation/">https://docs.astral.sh/uv/getting-started/installation/</a>.</p>
 <p>Inside project directory install dependencies.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>install
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>sync
 </pre></div>
 </div>
 <p>After that, install pre-commit hook.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./.venv/bin/python<span class="w"> </span>-m<span class="w"> </span>pre-commit<span class="w"> </span>install
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>pre-commit<span class="w"> </span>install
 </pre></div>
 </div>
 <p>Done 🪄 🐈‍⬛ Now you can develop.</p>
@@ -133,15 +129,11 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 </pre></div>
 </div>
 <p>Build the package.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>build
-</pre></div>
-</div>
-<p>Configurate your pypi token for the poetry.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>config<span class="w"> </span>pypi-token.pypi<span class="w"> </span>&lt;your-api-token&gt;
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>build
 </pre></div>
 </div>
 <p>Publish the package.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>poetry<span class="w"> </span>publish
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>publish<span class="w"> </span>--token<span class="w"> </span>&lt;your-api-token&gt;
 </pre></div>
 </div>
 <div class="admonition warning">
@@ -152,7 +144,7 @@ git<span class="w"> </span>push<span class="w"> </span>origin<span class="w"> </
 <section id="how-to-generate-badges">
 <h2>How to generate badges?<a class="headerlink" href="#how-to-generate-badges" title="Permalink to this heading"></a></h2>
 <p>Just exec that command.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./.venv/bin/python<span class="w"> </span>./.bc/badges.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>uv<span class="w"> </span>run<span class="w"> </span>./.bc/badges.py
 </pre></div>
 </div>
 <p>Then all badges actualize ourselves.</p>
