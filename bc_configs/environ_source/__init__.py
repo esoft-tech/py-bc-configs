@@ -11,7 +11,7 @@ If you wanna use it, please that in your main src `__init__.py` file.
 
 .. note::
 
-    If dotenv installed, it will use the dotenv module and call the load_dotenv function.
+    If python-dotenv installed, it will use the dotenv module and call the load_dotenv function.
 
 .. note::
 
@@ -24,4 +24,4 @@ from .define import define
 from .EnvironSourceException import EnvironSourceException
 from .VaultConfig import VaultConfig
 
-__all__ = ["define", "VaultConfig", "EnvironSourceException"]
+__all__ = ["EnvironSourceException", "VaultConfig", "define"]

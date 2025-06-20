@@ -14,27 +14,21 @@ Clone the repository.
     git clone git@github.com:esoft-tech/py-bc-configs.git
 
 
-Install poetry using the guide from their website – https://python-poetry.org/docs/#installation.
-
-After installation, apply this in order for poetry to create venv in your project folder.
-
-.. code:: bash
-
-    poetry config virtualenvs.in-project true
+Install uv using the guide from their website – https://docs.astral.sh/uv/getting-started/installation/.
 
 
 Inside project directory install dependencies.
 
 .. code:: bash
 
-    poetry install
+    uv sync
 
 
 After that, install pre-commit hook.
 
 .. code:: bash
 
-    ./.venv/bin/python -m pre-commit install
+    uv run pre-commit install
 
 
 Done 🪄 🐈‍⬛ Now you can develop.
@@ -77,20 +71,13 @@ Build the package.
 
 .. code:: bash
 
-    poetry build
-
-
-Configurate your pypi token for the poetry.
-
-.. code:: bash
-
-    poetry config pypi-token.pypi <your-api-token>
+    uv build
 
 Publish the package.
 
 .. code:: bash
 
-    poetry publish
+    uv publish --token <your-api-token>
 
 .. warning::
 
@@ -105,7 +92,7 @@ Just exec that command.
 
 .. code:: bash
 
-    ./.venv/bin/python ./.bc/badges.py
+    uv run ./.bc/badges.py
 
 Then all badges actualize ourselves.
 

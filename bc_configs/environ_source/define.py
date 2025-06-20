@@ -1,4 +1,4 @@
-import importlib.util
+import logging
 import os
 
 from .EnvironSourceException import EnvironSourceException
@@ -31,9 +31,11 @@ def _dotenv_define() -> None:
     as it allows you to define environment variables
     in a .env file and have them automatically loaded into your application.
     """
-    if importlib.util.find_spec("dotenv") is not None:
+    try:
         from dotenv import load_dotenv  # type: ignore[import]
-
+    except ImportError:
+        logging.debug("python-dotenv is not installed and will be skipped")
+    else:
         load_dotenv()
 
 
@@ -48,13 +50,13 @@ def _vault_define(config: VaultConfig | None = None) -> None:
     """
     config = config or VaultConfig()
     if config.need_to_use():
-        if importlib.util.find_spec("hvac") is not None:
+        try:
             import hvac  # type: ignore[import]
-        else:
+        except ImportError:
             raise EnvironSourceException(
                 "hvac is not installed but you are trying to use Vault for config. "
                 "Please install hvac module `pip install hvac`.",
-            )
+            ) from None
 
         if config.has_filled_connect_fields():
             vault_client = hvac.Client(url=config.address)
