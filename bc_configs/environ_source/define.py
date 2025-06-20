@@ -21,7 +21,7 @@ def define(*, vault_config: VaultConfig | None = None) -> None:
 
 def _dotenv_define() -> None:
     """
-    Load the dotenv module and call the load_dotenv function.
+    Load the dotenv module (from python-dotenv package) and call the load_dotenv function.
 
     This function checks if the dotenv module is available and then imports it.
     It then calls the load_dotenv function to load the environment variables
@@ -37,6 +37,32 @@ def _dotenv_define() -> None:
         logging.debug("python-dotenv is not installed and will be skipped")
     else:
         load_dotenv()
+
+
+def _yaml_define() -> None:
+    """
+    Load the yaml module (from pyyaml package) and define environment variables from secrets stored in yaml-file.
+
+    This function checks if the yaml module is available and then imports it.
+    It then calls the load_yaml function to load the environment variables
+    from the .env.yml file or $YAML_CONFIG_FILE.
+    """
+
+    def load_yaml() -> None:
+        file_path = os.getenv("YAML_CONFIG_FILE", ".env.yml")
+        with open(file_path, "r") as f:
+            yaml_secrets = yaml.safe_load(f)
+
+        for k, v in yaml_secrets.items():
+            if k not in os.environ:
+                os.environ.update(**{k: str(v)})
+
+    try:
+        import yaml  # type: ignore[import]
+    except ImportError:
+        logging.debug("pyyaml is not installed and will be skipped")
+    else:
+        load_yaml()
 
 
 def _vault_define(config: VaultConfig | None = None) -> None:
