@@ -167,3 +167,6 @@ cython_debug/
 # Except Sphinx docs builded html
 doctrees/
 !docs/build/
+
+# MacOS
+.DS_Store
