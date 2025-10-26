@@ -7,8 +7,4 @@
    bc_configs.configurator.md
    bc_configs.environ_source.md
 
-.. automodule:: bc_configs
-   :members:
-   :undoc-members:
-   :show-inheritance:
 ```
