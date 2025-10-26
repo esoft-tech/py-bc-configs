@@ -69,7 +69,8 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs/_build/
+/docs/build/*
+!/docs/build/html
 
 # PyBuilder
 .pybuilder/
@@ -166,7 +167,6 @@ cython_debug/
 
 # Except Sphinx docs builded html
 doctrees/
-!docs/build/
 
 # MacOS
 .DS_Store

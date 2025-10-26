@@ -5,23 +5,54 @@ description = "Add your description here"
 readme = "README.md"
 authors = [{ name = "Тёма Широких", email = "yartemetr@yandex.ru" }]
 requires-python = ">=3.11"
-dependencies = [
+dependencies = ["pydantic", "pyyaml"]
+
+[project.optional-dependencies]
+hashicorp = ["bc-configs", "hvac"]
+
+[dependency-groups]
+docs = [
+    "bc-configs",
     "autodoc-pydantic>=2.2.0",
     "furo>=2025.9.25",
     "myst-parser>=4.0.1",
-    "pydantic",
-    "pyyaml",
     "sphinx>=8.2.3",
     "sphinx-book-theme>=1.1.4",
     "sphinx-rtd-theme>=3.0.2",
 ]
+dev = ["bc-configs", "coverage", "mypy", "pre-commit", "python-dotenv", "ruff"]
+test = ["bc-configs", "pytest", "pytest-cov", "python-dotenv"]
+hashicorp = ["bc-configs", "hvac"]
+
+
+[tool.uv]
+default-groups = ["docs", "dev", "test"]
+
 
 [build-system]
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
-[dependency-groups]
-dev = ["coverage", "mypy", "pre-commit", "pytest", "python-dotenv", "ruff"]
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+omit = [
+    "src/bc_configs/__init__.py",
+    "src/bc_configs/configurator/__init__.py",
+    "src/bc_configs/environ_source/__init__.py",
+]
+
+
+[tool.coverage.report]
+show_missing = true
+fail_under = 90
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
 
 [tool.mypy]
 plugins = ['pydantic.mypy']

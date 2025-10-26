@@ -58,7 +58,7 @@ Features
    :maxdepth: 2
    :caption: Contents:
 
-   bc_configs
+   bc_configs.md
    for_contributing
 
 Indices and tables

@@ -16,21 +16,21 @@ repos:
     hooks:
       - id: mypy
         name: mypy
-        entry: '.venv/bin/python -m mypy'
+        entry: ".venv/bin/python -m mypy"
         language: system
-        args: ['.']
+        args: ["."]
         pass_filenames: false
         types: [python]
       - id: ruff
         name: ruff
-        entry: '.venv/bin/python -m ruff'
+        entry: ".venv/bin/python -m ruff"
         language: system
-        args: ['check', '.']
+        args: ["check", "."]
         pass_filenames: false
         types: [python]
       - id: coverage
         name: coverage
-        entry: '.venv/bin/python -m coverage run --source="./bc_configs" --omit="*test_*.py" -m unittest discover --pattern="*test_*.py"'
+        entry: ".venv/bin/python -m pytest --cov=src"
         language: system
         pass_filenames: false
         types: [python]
