@@ -1,11 +1,42 @@
 [project]
 name = "bc-configs"
-version = "0.3.0"
-description = "Add your description here"
+version = "0.3.1"
+description = "Configuration module, that provides a way to manage configs structure, validation and casting to type inside your code. Based on pedantic models. Additionally it can automatically getting config from environment variables, .env, HashiCorp Vault, etc."
+keywords = ["config", "environment", "dotenv", "pydantic"]
+classifiers = [
+    'Development Status :: 5 - Production/Stable',
+    'Programming Language :: Python',
+    'Programming Language :: Python :: Implementation :: CPython',
+    'Programming Language :: Python :: Implementation :: PyPy',
+    'Programming Language :: Python :: 3',
+    'Programming Language :: Python :: 3.13',
+    'Intended Audience :: Developers',
+    'Intended Audience :: Information Technology',
+    'Intended Audience :: System Administrators',
+    'Operating System :: Unix',
+    'Operating System :: POSIX :: Linux',
+    'Environment :: Console',
+    'Environment :: MacOS X',
+    'Topic :: Software Development :: Libraries :: Python Modules',
+    'Topic :: Internet',
+]
+
+license = { text = "MIT" }
 readme = "README.md"
-authors = [{ name = "Тёма Широких", email = "yartemetr@yandex.ru" }]
+
+authors = [
+    { name = "Артём Широких", email = "job@artemetr.ru" },
+    { name = "Esoft", email = "it@esoft.tech" },
+]
+maintainers = [{ name = "Артём Широких", email = "job@artemetr.ru" }]
+
 requires-python = ">=3.11"
 dependencies = ["pydantic", "pyyaml"]
+
+[project.urls]
+homepage = "https://github.com/etagi-esoft/py-bc-configs"
+source = "https://github.com/etagi-esoft/py-bc-configs"
+documentation = "https://esoft-tech.github.io/py-bc-configs/index.html"
 
 [project.optional-dependencies]
 hashicorp = ["bc-configs", "hvac"]

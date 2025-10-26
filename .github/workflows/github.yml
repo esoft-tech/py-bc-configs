@@ -31,8 +31,7 @@ jobs:
 
       - name: Run coverage
         run: |
-          uv run coverage run --omit="*test_*.py" -m unittest discover --pattern="*test_*.py"
-          uv run coverage report
+          uv run pytest --cov=src --cov-report=xml
 
       - name: Run mypy
         run: uv run mypy .

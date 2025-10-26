@@ -88,4 +88,5 @@ Then all badges actualize ourselves.
 ## How to build sphinx docs?
 
 ```bash
-bash ./.bc/build_docs.sh
+cd docs && make html
+```
