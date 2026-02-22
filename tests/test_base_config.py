@@ -98,6 +98,45 @@ class TestBaseConfig(unittest.TestCase):
             self.assertIn("CUSTOM_ENV_NAME", error_msg)
             self.assertIn("my_field", error_msg)
 
+    def test_multiple_missing_fields_error(self) -> None:
+        # Create an instance of the custom configuration class that extends BaseConfig
+        class CustomConfig(BaseConfig):
+            field1: str
+            field2: int
+            field3: float
+
+        # Mock the os.environ dictionary without the required fields
+        with patch.dict(os.environ, {}, clear=True):
+            # Create an instance of the custom configuration class
+            with self.assertRaises(ValidationError) as context:
+                _ = CustomConfig()  # type: ignore[call-arg]
+
+            # Check if the error message includes all environment variable names
+            error_msg = str(context.exception)
+            self.assertIn("CUSTOM_FIELD1", error_msg)
+            self.assertIn("CUSTOM_FIELD2", error_msg)
+            self.assertIn("CUSTOM_FIELD3", error_msg)
+            self.assertIn("field1", error_msg)
+            self.assertIn("field2", error_msg)
+            self.assertIn("field3", error_msg)
+
+    def test_missing_field_error_without_description(self) -> None:
+        # Create an instance of the custom configuration class that extends BaseConfig
+        class CustomConfig(BaseConfig):
+            field1: str  # No description
+
+        # Mock the os.environ dictionary without the required field
+        with patch.dict(os.environ, {}, clear=True):
+            # Create an instance of the custom configuration class
+            with self.assertRaises(ValidationError) as context:
+                _ = CustomConfig()  # type: ignore[call-arg]
+
+            # Check if the error message includes the environment variable name but no description
+            error_msg = str(context.exception)
+            self.assertIn("CUSTOM_FIELD1", error_msg)
+            self.assertIn("field1", error_msg)
+            self.assertNotIn("description:", error_msg)
+
 
 if __name__ == "__main__":
     unittest.main()

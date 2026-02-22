@@ -45,7 +45,7 @@ When a required configuration field is missing, the library raises a `Validation
 ```
 ValidationError: 1 validation error for MyConfig
 some_int
-  Field required  →  env var: 'MY_SOME_INT' [type=missing, input_value={}, input_type=dict]
+  Field required  →  env var: 'MY_SOME_INT' (description: Database port number) [type=missing, input_value={}, input_type=dict]
 ```
 
 If the field has a description, it will be included in the error message:

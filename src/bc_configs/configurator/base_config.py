@@ -1,11 +1,10 @@
 import os
 import re
 from abc import ABC
-from typing import Any, ClassVar, cast
+from typing import Any, LiteralString, cast
 
 from pydantic import BaseModel, ValidationError, model_validator
 from pydantic_core import InitErrorDetails, PydanticCustomError
-from typing_extensions import LiteralString
 
 
 def _get_env_name_by_field_name(class_name: str, field_name: str) -> str:
@@ -92,9 +91,6 @@ class BaseConfig(BaseModel, ABC):
         # db_port: Field required  →  env var: 'MY_DB_PORT'
     """
 
-    # Mapping from pydantic field name to environment variable name
-    _config_keys: ClassVar[dict[str, str]] = {}
-
     @model_validator(mode="before")
     @classmethod
     def _populate_from_env(cls, data: dict) -> Any:
@@ -159,10 +155,10 @@ class BaseConfig(BaseModel, ABC):
 
             for err in original_errors:
                 field = cast(str, err["loc"][0]) if err["loc"] else None
-                cfg_key = cls._config_keys.get(field) if field else None
+                cfg_key = None
 
-                # If no custom mapping, try to generate env var name
-                if cfg_key is None and field:
+                # Try to generate env var name
+                if field:
                     field_info = cls.model_fields.get(field)
                     if field_info:
                         env_name = cast(
@@ -177,6 +173,9 @@ class BaseConfig(BaseModel, ABC):
                 msg = err["msg"]
                 if cfg_key:
                     msg = f"{msg}  →  env var: '{cfg_key}'"
+                # Include field description if available
+                if field and field_info and field_info.description:
+                    msg = f"{msg} (description: {field_info.description})"
 
                 enriched_errors.append(
                     InitErrorDetails(
