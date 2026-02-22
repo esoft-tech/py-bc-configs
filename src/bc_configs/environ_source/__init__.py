@@ -37,7 +37,6 @@ If you wanna use it, please that in your main src `__init__.py` file.
 """
 
 from .define import define
-from .environ_source_exception import EnvironSourceException
 from .vault_config import VaultConfig
 
-__all__ = ["EnvironSourceException", "VaultConfig", "define"]
+__all__ = ["VaultConfig", "define"]

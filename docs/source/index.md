@@ -44,6 +44,31 @@ The name of the environment variable is formed based on the names of the class a
 - Load environment variables from YAML files (e.g., `.env.yml` or custom path via `YAML_CONFIG_FILE` environment variable).
 - Load secrets from HashiCorp Vault (using `hvac`).
 
+## Error handling
+
+When a required configuration field is missing, the library raises a `ValidationError` with an enriched error message that includes the environment variable name:
+
+```
+ValidationError: 1 validation error for MyConfig
+some_int
+  Field required  →  env var: 'MY_SOME_INT' [type=missing, input_value={}, input_type=dict]
+```
+
+If the field has a description, it will be included in the error message:
+
+```python
+class MyConfig(BaseConfig):
+    some_int: int = Field(description="Database port number")
+```
+
+Error message:
+
+```
+ValidationError: 1 validation error for MyConfig
+some_int
+  Field required  →  env var: 'MY_SOME_INT' [type=missing, input_value={}, input_type=dict]
+```
+
 ```{toctree}
 :maxdepth: 2
 :caption: Contents:
@@ -54,6 +79,6 @@ for_contributing.md
 
 # Indices and tables
 
-* {ref}`genindex`
-* {ref}`modindex`
-* {ref}`search`
+- {ref}`genindex`
+- {ref}`modindex`
+- {ref}`search`

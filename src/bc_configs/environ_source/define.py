@@ -1,7 +1,6 @@
 import logging
 import os
 
-from .environ_source_exception import EnvironSourceException
 from .vault_config import VaultConfig
 
 
@@ -99,14 +98,14 @@ def _vault_define(config: VaultConfig | None = None) -> None:
     :param config: The VaultConfig object containing the configuration for accessing Vault.
     :type config: VaultConfig | None
 
-    :raises EnvironSourceException: If hvac module is not installed or if there is no data to connect to Vault.
+    :raises RuntimeError: If hvac module is not installed or if there is no data to connect to Vault.
     """
     config = config or VaultConfig()
     if config.need_to_use():
         try:
             import hvac  # type: ignore[import]
         except ImportError:
-            raise EnvironSourceException(
+            raise RuntimeError(
                 "hvac is not installed but you are trying to use Vault for config. "
                 "Please install hvac module `pip install hvac`.",
             ) from None
@@ -128,4 +127,4 @@ def _vault_define(config: VaultConfig | None = None) -> None:
                 if k not in os.environ:
                     os.environ.update(**{k: str(v)})
         else:
-            raise EnvironSourceException("There is no data to connect to Vault")
+            raise RuntimeError("There is no data to connect to Vault")

@@ -1,9 +1,11 @@
 import os
 import re
 from abc import ABC
-from typing import Any, cast
+from typing import Any, ClassVar, cast
 
-from pydantic import BaseModel, model_validator
+from pydantic import BaseModel, ValidationError, model_validator
+from pydantic_core import InitErrorDetails, PydanticCustomError
+from typing_extensions import LiteralString
 
 
 def _get_env_name_by_field_name(class_name: str, field_name: str) -> str:
@@ -73,7 +75,25 @@ class BaseConfig(BaseModel, ABC):
     """
     Provides to receive values from the environment variables on the validation step of
     pydantic model.
+
+    When a required field is missing, the error message will include the environment
+    variable name that should be set, making it easier to debug configuration issues.
+
+    Example:
+
+    .. code:: python
+
+        class MyConfig(BaseConfig):
+            db_host: str
+            db_port: int
+
+        # If MY_DB_HOST or MY_DB_PORT are not set, the error will show:
+        # db_host: Field required  →  env var: 'MY_DB_HOST'
+        # db_port: Field required  →  env var: 'MY_DB_PORT'
     """
+
+    # Mapping from pydantic field name to environment variable name
+    _config_keys: ClassVar[dict[str, str]] = {}
 
     @model_validator(mode="before")
     @classmethod
@@ -85,8 +105,8 @@ class BaseConfig(BaseModel, ABC):
 
         :param cls: The class that the function is called on.
         :type cls: type
-        :param values: The dictionary of values to check and update.
-        :type values: dict
+        :param data: The dictionary of values to check and update.
+        :type data: dict
         :return: The updated dictionary of values that will be stored in config instance.
         :rtype: dict
         """
@@ -112,3 +132,65 @@ class BaseConfig(BaseModel, ABC):
                     data[field_name] = value
 
         return data
+
+    @model_validator(mode="wrap")
+    @classmethod
+    def _enrich_errors(cls, values: Any, handler):
+        """
+        Intercept ValidationError and enrich error messages with environment variable names.
+
+        This makes it easier for users to understand which environment variable they
+        need to set when a required field is missing.
+
+        :param values: Input data
+        :type values: Any
+        :param handler: Handler function (standard Pydantic validation)
+        :type handler: Callable
+        :return: Validated data
+        :rtype: Any
+        :raises ValidationError: If required fields are missing
+        """
+        try:
+            return handler(values)
+        except ValidationError as exc:
+            # Enrich each error with environment variable name
+            original_errors = exc.errors(include_url=False)
+            enriched_errors: list[InitErrorDetails] = []
+
+            for err in original_errors:
+                field = cast(str, err["loc"][0]) if err["loc"] else None
+                cfg_key = cls._config_keys.get(field) if field else None
+
+                # If no custom mapping, try to generate env var name
+                if cfg_key is None and field:
+                    field_info = cls.model_fields.get(field)
+                    if field_info:
+                        env_name = cast(
+                            str, (field_info.json_schema_extra or {}).get("env_name")
+                        )
+                        if env_name is None:
+                            cfg_key = _get_env_name_by_field_name(cls.__name__, field)
+                        else:
+                            cfg_key = env_name
+
+                # Build enriched message
+                msg = err["msg"]
+                if cfg_key:
+                    msg = f"{msg}  →  env var: '{cfg_key}'"
+
+                enriched_errors.append(
+                    InitErrorDetails(
+                        type=PydanticCustomError(
+                            cast(LiteralString, err["type"]),
+                            "{enriched_msg}",
+                            {"enriched_msg": msg},
+                        ),
+                        loc=err["loc"],
+                        input=err.get("input"),
+                    )
+                )
+
+            raise ValidationError.from_exception_data(
+                cls.__name__,
+                enriched_errors,  # type: ignore[arg-type]
+            ) from exc
