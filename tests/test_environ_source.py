@@ -34,7 +34,9 @@ class TestEnvironSource(unittest.TestCase):
         when python-dotenv is installed.
         """
         # Create a temporary .env file
-        env_content: str = "TEST_DOTENV_VAR=dotenv_value\nEXISTING_VAR=should_not_be_overwritten\n"
+        env_content: str = (
+            "TEST_DOTENV_VAR=dotenv_value\nEXISTING_VAR=should_not_be_overwritten\n"
+        )
         temp_env_file: Path = self._create_temp_file(env_content, ".env")
 
         # Set an existing environment variable that should not be overwritten
@@ -43,7 +45,9 @@ class TestEnvironSource(unittest.TestCase):
         with patch("dotenv.load_dotenv") as mock_load_dotenv:
             # Mock the behavior of load_dotenv to "load" variables
             # into os.environ as if it read our temp_env_file
-            def mock_load_dotenv_side_effect(dotenv_path: Any = None, **kwargs: Any) -> None:
+            def mock_load_dotenv_side_effect(
+                dotenv_path: Any = None, **kwargs: Any
+            ) -> None:
                 if dotenv_path is None:
                     # Ensure it "sees" our file if no path is explicitly given
                     dotenv_path = temp_env_file
@@ -57,7 +61,9 @@ class TestEnvironSource(unittest.TestCase):
 
             mock_load_dotenv.assert_called_once()
             self.assertEqual(os.getenv("TEST_DOTENV_VAR"), "dotenv_value")
-            self.assertEqual(os.getenv("EXISTING_VAR"), "original_value")  # Verify it was not overwritten
+            self.assertEqual(
+                os.getenv("EXISTING_VAR"), "original_value"
+            )  # Verify it was not overwritten
 
         os.unlink(temp_env_file)  # Delete the temporary file
 
@@ -66,7 +72,9 @@ class TestEnvironSource(unittest.TestCase):
         Verifies that define() correctly loads variables from a YAML file
         when pyyaml is installed.
         """
-        yaml_content: str = "TEST_YAML_VAR: yaml_value\nEXISTING_VAR: should_not_be_overwritten_yaml\n"
+        yaml_content: str = (
+            "TEST_YAML_VAR: yaml_value\nEXISTING_VAR: should_not_be_overwritten_yaml\n"
+        )
         temp_yaml_file: Path = self._create_temp_file(yaml_content, ".env.yml")
 
         os.environ["YAML_CONFIG_FILE"] = str(temp_yaml_file)
@@ -75,7 +83,9 @@ class TestEnvironSource(unittest.TestCase):
         define()
 
         self.assertEqual(os.getenv("TEST_YAML_VAR"), "yaml_value")
-        self.assertEqual(os.getenv("EXISTING_VAR"), "original_value")  # Should remain the original value
+        self.assertEqual(
+            os.getenv("EXISTING_VAR"), "original_value"
+        )  # Should remain the original value
 
         os.unlink(temp_yaml_file)  # Delete the temporary file
 
@@ -132,7 +142,9 @@ class TestEnvironSource(unittest.TestCase):
 
         with patch("logging.warning") as mock_warning:
             define()
-            mock_warning.assert_called_with(f"Key '123' in YAML file '{temp_yaml_file}' is not a string. Skipping.")
+            mock_warning.assert_called_with(
+                f"Key '123' in YAML file '{temp_yaml_file}' is not a string. Skipping."
+            )
         self.assertIsNone(os.getenv("123"))
 
         os.unlink(temp_yaml_file)

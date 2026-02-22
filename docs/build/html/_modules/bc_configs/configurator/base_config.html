@@ -233,12 +233,14 @@
         </div>
         <article role="main" id="furo-main-content">
           <h1>Source code for bc_configs.configurator.base_config</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">abc</span><span class="w"> </span><span class="kn">import</span> <span class="n">ABC</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">LiteralString</span><span class="p">,</span> <span class="n">cast</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">model_validator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">model_validator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic_core</span><span class="w"> </span><span class="kn">import</span> <span class="n">InitErrorDetails</span><span class="p">,</span> <span class="n">PydanticCustomError</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_get_env_name_by_field_name</span><span class="p">(</span><span class="n">class_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">field_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -310,6 +312,21 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Provides to receive values from the environment variables on the validation step of</span>
 <span class="sd">    pydantic model.</span>
+
+<span class="sd">    When a required field is missing, the error message will include the environment</span>
+<span class="sd">    variable name that should be set, making it easier to debug configuration issues.</span>
+
+<span class="sd">    Example:</span>
+
+<span class="sd">    .. code:: python</span>
+
+<span class="sd">        class MyConfig(BaseConfig):</span>
+<span class="sd">            db_host: str</span>
+<span class="sd">            db_port: int</span>
+
+<span class="sd">        # If MY_DB_HOST or MY_DB_PORT are not set, the error will show:</span>
+<span class="sd">        # db_host: Field required  →  env var: &#39;MY_DB_HOST&#39;</span>
+<span class="sd">        # db_port: Field required  →  env var: &#39;MY_DB_PORT&#39;</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
@@ -322,8 +339,8 @@
 
 <span class="sd">        :param cls: The class that the function is called on.</span>
 <span class="sd">        :type cls: type</span>
-<span class="sd">        :param values: The dictionary of values to check and update.</span>
-<span class="sd">        :type values: dict</span>
+<span class="sd">        :param data: The dictionary of values to check and update.</span>
+<span class="sd">        :type data: dict</span>
 <span class="sd">        :return: The updated dictionary of values that will be stored in config instance.</span>
 <span class="sd">        :rtype: dict</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -336,9 +353,12 @@
                     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
                         <span class="sa">f</span><span class="s2">&quot;Unexpected </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">field_name</span><span class="si">}</span><span class="s2"> json_schema_extra type: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">field_info</span><span class="o">.</span><span class="n">json_schema_extra</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>  <span class="c1"># noqa: E501</span>
                     <span class="p">)</span>
-                <span class="n">env_name</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
-                    <span class="nb">str</span><span class="p">,</span> <span class="p">(</span><span class="n">field_info</span><span class="o">.</span><span class="n">json_schema_extra</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env_name&quot;</span><span class="p">)</span>
-                <span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field_info</span><span class="o">.</span><span class="n">json_schema_extra</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                    <span class="n">env_name</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
+                        <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">field_info</span><span class="o">.</span><span class="n">json_schema_extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env_name&quot;</span><span class="p">)</span>
+                    <span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">env_name</span> <span class="o">=</span> <span class="kc">None</span>
 
                 <span class="n">value</span> <span class="o">=</span> <span class="n">_get_field_form_env</span><span class="p">(</span>
                     <span class="n">class_name</span><span class="o">=</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
@@ -348,7 +368,78 @@
                 <span class="k">if</span> <span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">data</span><span class="p">[</span><span class="n">field_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
 
-        <span class="k">return</span> <span class="n">data</span></div>
+        <span class="k">return</span> <span class="n">data</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;wrap&quot;</span><span class="p">)</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_enrich_errors</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">values</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">handler</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Intercept ValidationError and enrich error messages with environment variable names.</span>
+
+<span class="sd">        This makes it easier for users to understand which environment variable they</span>
+<span class="sd">        need to set when a required field is missing.</span>
+
+<span class="sd">        :param values: Input data</span>
+<span class="sd">        :type values: Any</span>
+<span class="sd">        :param handler: Handler function (standard Pydantic validation)</span>
+<span class="sd">        :type handler: Callable</span>
+<span class="sd">        :return: Validated data</span>
+<span class="sd">        :rtype: Any</span>
+<span class="sd">        :raises ValidationError: If required fields are missing</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">handler</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ValidationError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="c1"># Enrich each error with environment variable name</span>
+            <span class="n">original_errors</span> <span class="o">=</span> <span class="n">exc</span><span class="o">.</span><span class="n">errors</span><span class="p">(</span><span class="n">include_url</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+            <span class="n">enriched_errors</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">InitErrorDetails</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+            <span class="k">for</span> <span class="n">err</span> <span class="ow">in</span> <span class="n">original_errors</span><span class="p">:</span>
+                <span class="n">field</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">err</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span> <span class="k">if</span> <span class="n">err</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+                <span class="n">cfg_key</span> <span class="o">=</span> <span class="kc">None</span>
+
+                <span class="c1"># Try to generate env var name</span>
+                <span class="k">if</span> <span class="n">field</span><span class="p">:</span>
+                    <span class="n">field_info</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">model_fields</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">field_info</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">field_info</span><span class="o">.</span><span class="n">json_schema_extra</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+                            <span class="n">env_name</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
+                                <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">field_info</span><span class="o">.</span><span class="n">json_schema_extra</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;env_name&quot;</span><span class="p">)</span>
+                            <span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">logging</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span>
+                                <span class="sa">f</span><span class="s2">&quot;Unexpected json_schema_extra type for </span><span class="si">{</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">field</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">field_info</span><span class="o">.</span><span class="n">json_schema_extra</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+                            <span class="p">)</span>
+                            <span class="n">env_name</span> <span class="o">=</span> <span class="kc">None</span>
+                        <span class="k">if</span> <span class="n">env_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">cfg_key</span> <span class="o">=</span> <span class="n">_get_env_name_by_field_name</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
+                        <span class="k">else</span><span class="p">:</span>
+                            <span class="n">cfg_key</span> <span class="o">=</span> <span class="n">env_name</span>
+
+                <span class="c1"># Build enriched message</span>
+                <span class="n">msg</span> <span class="o">=</span> <span class="n">err</span><span class="p">[</span><span class="s2">&quot;msg&quot;</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">cfg_key</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2">  →  env var: &#39;</span><span class="si">{</span><span class="n">cfg_key</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="c1"># Include field description if available</span>
+                <span class="k">if</span> <span class="n">field</span> <span class="ow">and</span> <span class="n">field_info</span> <span class="ow">and</span> <span class="n">field_info</span><span class="o">.</span><span class="n">description</span><span class="p">:</span>
+                    <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">msg</span><span class="si">}</span><span class="s2"> (description: </span><span class="si">{</span><span class="n">field_info</span><span class="o">.</span><span class="n">description</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+                <span class="n">enriched_errors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">InitErrorDetails</span><span class="p">(</span>
+                        <span class="nb">type</span><span class="o">=</span><span class="n">PydanticCustomError</span><span class="p">(</span>
+                            <span class="n">cast</span><span class="p">(</span><span class="n">LiteralString</span><span class="p">,</span> <span class="n">err</span><span class="p">[</span><span class="s2">&quot;type&quot;</span><span class="p">]),</span>
+                            <span class="s2">&quot;</span><span class="si">{enriched_msg}</span><span class="s2">&quot;</span><span class="p">,</span>
+                            <span class="p">{</span><span class="s2">&quot;enriched_msg&quot;</span><span class="p">:</span> <span class="n">msg</span><span class="p">},</span>
+                        <span class="p">),</span>
+                        <span class="n">loc</span><span class="o">=</span><span class="n">err</span><span class="p">[</span><span class="s2">&quot;loc&quot;</span><span class="p">],</span>
+                        <span class="nb">input</span><span class="o">=</span><span class="n">err</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;input&quot;</span><span class="p">),</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+
+            <span class="k">raise</span> <span class="n">ValidationError</span><span class="o">.</span><span class="n">from_exception_data</span><span class="p">(</span>
+                <span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                <span class="n">enriched_errors</span><span class="p">,</span>  <span class="c1"># type: ignore[arg-type]</span>
+            <span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">exc</span></div>
 
 </pre></div>
         </article>

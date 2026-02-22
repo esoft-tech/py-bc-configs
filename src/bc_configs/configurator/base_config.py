@@ -1,3 +1,4 @@
+import logging
 import os
 import re
 from abc import ABC
@@ -115,9 +116,12 @@ class BaseConfig(BaseModel, ABC):
                     raise ValueError(
                         f"Unexpected {cls.__name__}.{field_name} json_schema_extra type: {type(field_info.json_schema_extra).__name__}",  # noqa: E501
                     )
-                env_name = cast(
-                    str, (field_info.json_schema_extra or {}).get("env_name")
-                )
+                if isinstance(field_info.json_schema_extra, dict):
+                    env_name = cast(
+                        str | None, field_info.json_schema_extra.get("env_name")
+                    )
+                else:
+                    env_name = None
 
                 value = _get_field_form_env(
                     class_name=cls.__name__,
@@ -161,9 +165,15 @@ class BaseConfig(BaseModel, ABC):
                 if field:
                     field_info = cls.model_fields.get(field)
                     if field_info:
-                        env_name = cast(
-                            str, (field_info.json_schema_extra or {}).get("env_name")
-                        )
+                        if isinstance(field_info.json_schema_extra, dict):
+                            env_name = cast(
+                                str | None, field_info.json_schema_extra.get("env_name")
+                            )
+                        else:
+                            logging.warning(
+                                f"Unexpected json_schema_extra type for {cls.__name__}.{field}: {type(field_info.json_schema_extra)}"
+                            )
+                            env_name = None
                         if env_name is None:
                             cfg_key = _get_env_name_by_field_name(cls.__name__, field)
                         else:

@@ -282,6 +282,26 @@
 <li><p>Load environment variables from YAML files (e.g., <code class="docutils literal notranslate"><span class="pre">.env.yml</span></code> or custom path via <code class="docutils literal notranslate"><span class="pre">YAML_CONFIG_FILE</span></code> environment variable).</p></li>
 <li><p>Load secrets from HashiCorp Vault (using <code class="docutils literal notranslate"><span class="pre">hvac</span></code>).</p></li>
 </ul>
+</section>
+<section id="error-handling">
+<h2>Error handling<a class="headerlink" href="#error-handling" title="Link to this heading">¶</a></h2>
+<p>When a required configuration field is missing, the library raises a <code class="docutils literal notranslate"><span class="pre">ValidationError</span></code> with an enriched error message that includes the environment variable name:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ValidationError: 1 validation error for MyConfig
+some_int
+  Field required  →  env var: &#39;MY_SOME_INT&#39; (description: Database port number) [type=missing, input_value={}, input_type=dict]
+</pre></div>
+</div>
+<p>If the field has a description, it will be included in the error message:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="n">some_int</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;Database port number&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Error message:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>ValidationError: 1 validation error for MyConfig
+some_int
+  Field required  →  env var: &#39;MY_SOME_INT&#39; [type=missing, input_value={}, input_type=dict]
+</pre></div>
+</div>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
@@ -361,6 +381,7 @@
 <li><a class="reference internal" href="#installation">Installation</a></li>
 <li><a class="reference internal" href="#make-your-custom-config-class">Make your custom config class</a></li>
 <li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#error-handling">Error handling</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>

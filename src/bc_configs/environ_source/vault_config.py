@@ -8,10 +8,18 @@ class VaultConfig(BaseConfig):
     Configuration for HashiCorp Vault.
     """
 
-    address: str | None = Field(default=None, description="The address of the Vault server.")
-    mount: str | None = Field(default=None, description="The mount point of the Vault server.")
-    path: str | None = Field(default=None, description="The path to the secret in the Vault.")
-    token: str | None = Field(default=None, description="The authentication token for accessing the Vault.")
+    address: str | None = Field(
+        default=None, description="The address of the Vault server."
+    )
+    mount: str | None = Field(
+        default=None, description="The mount point of the Vault server."
+    )
+    path: str | None = Field(
+        default=None, description="The path to the secret in the Vault."
+    )
+    token: str | None = Field(
+        default=None, description="The authentication token for accessing the Vault."
+    )
     username: str | None = Field(
         default=None,
         description="The username for authentication (if token is not provided).",

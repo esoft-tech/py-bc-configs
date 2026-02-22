@@ -339,10 +339,22 @@ pydantic model. For use, create child class of <cite>BaseConfig</cite> and decla
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></p>
 <p>Provides to receive values from the environment variables on the validation step of
 pydantic model.</p>
+<p>When a required field is missing, the error message will include the environment
+variable name that should be set, making it easier to debug configuration issues.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="n">db_host</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">db_port</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="c1"># If MY_DB_HOST or MY_DB_PORT are not set, the error will show:</span>
+<span class="c1"># db_host: Field required  →  env var: &#39;MY_DB_HOST&#39;</span>
+<span class="c1"># db_port: Field required  →  env var: &#39;MY_DB_PORT&#39;</span>
+</pre></div>
+</div>
 <p><details  class="autodoc_pydantic_collapsable_json">
 <summary>Show JSON schema</summary><div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
 <span class="w">   </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BaseConfig&quot;</span><span class="p">,</span>
-<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Provides to receive values from the environment variables on the validation step of\npydantic model.&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Provides to receive values from the environment variables on the validation step of\npydantic model.\n\nWhen a required field is missing, the error message will include the environment\nvariable name that should be set, making it easier to debug configuration issues.\n\nExample:\n\n.. code:: python\n\n    class MyConfig(BaseConfig):\n        db_host: str\n        db_port: int\n\n    # If MY_DB_HOST or MY_DB_PORT are not set, the error will show:\n    # db_host: Field required  \u2192  env var: &#39;MY_DB_HOST&#39;\n    # db_port: Field required  \u2192  env var: &#39;MY_DB_PORT&#39;&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
 <span class="p">}</span>
@@ -351,6 +363,7 @@ pydantic model.</p>
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Validators<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_enrich_errors</span></code> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">_populate_from_env</span></code> » <code class="xref py py-obj docutils literal notranslate"><span class="pre">all</span> <span class="pre">fields</span></code></p></li>
 </ul>
 </dd>
@@ -362,6 +375,18 @@ pydantic model.</p>
 <h2>BaseConfig<a class="headerlink" href="#baseconfig" title="Link to this heading">¶</a></h2>
 <p>Provides to receive values from the environment variables on the validation step of
 pydantic model.</p>
+<p>When a required field is missing, the error message will include the environment
+variable name that should be set, making it easier to debug configuration issues.</p>
+<p>Example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">MyConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+    <span class="n">db_host</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">db_port</span><span class="p">:</span> <span class="nb">int</span>
+
+<span class="c1"># If MY_DB_HOST or MY_DB_PORT are not set, the error will show:</span>
+<span class="c1"># db_host: Field required  →  env var: &#39;MY_DB_HOST&#39;</span>
+<span class="c1"># db_port: Field required  →  env var: &#39;MY_DB_PORT&#39;</span>
+</pre></div>
+</div>
 </section>
 </section>
 
