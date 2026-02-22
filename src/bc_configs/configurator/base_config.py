@@ -109,18 +109,16 @@ class BaseConfig(BaseModel, ABC):
         """
         for field_name, field_info in cls.model_fields.items():
             if data.get(field_name) is None:
-                if (
-                    not isinstance(field_info.json_schema_extra, dict)
-                    and field_info.json_schema_extra is not None
-                ):
-                    raise ValueError(
-                        f"Unexpected {cls.__name__}.{field_name} json_schema_extra type: {type(field_info.json_schema_extra).__name__}",  # noqa: E501
-                    )
                 if isinstance(field_info.json_schema_extra, dict):
                     env_name = cast(
                         str | None, field_info.json_schema_extra.get("env_name")
                     )
+                elif field_info.json_schema_extra is None:
+                    env_name = None
                 else:
+                    logging.warning(
+                        f"Unexpected json_schema_extra type for {cls.__name__}.{field_name}: {type(field_info.json_schema_extra)}"
+                    )
                     env_name = None
 
                 value = _get_field_form_env(
@@ -169,6 +167,8 @@ class BaseConfig(BaseModel, ABC):
                             env_name = cast(
                                 str | None, field_info.json_schema_extra.get("env_name")
                             )
+                        elif field_info.json_schema_extra is None:
+                            env_name = None
                         else:
                             logging.warning(
                                 f"Unexpected json_schema_extra type for {cls.__name__}.{field}: {type(field_info.json_schema_extra)}"
